@@ -33,6 +33,14 @@ CODEGENDIR   := $(OUTPUT_DIR)/codegen
 include $(MATTER_MAIN_SRC)
 
 # -------------------------------------------------------------------
+# Compiler Flags
+# -------------------------------------------------------------------
+CFLAGS += -DCONFIG_ENABLE_AMEBA_APP_TASK=1
+ifeq ($(CHIP_ENABLE_SHELL), true)
+CFLAGS += -DCONFIG_ENABLE_CHIP_SHELL=1
+endif
+
+# -------------------------------------------------------------------
 # Include Path
 # -------------------------------------------------------------------
 INCLUDES += -I$(CHIPDIR)/examples/all-clusters-app/ameba/main/include
@@ -74,17 +82,17 @@ SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/dishwasher_mode/ameba_dishwasher_
 # eletrical power measurement cluster
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/electrical_power_measurement/ameba_electrical_power_measurement_delegate.cpp
 # energy evse cluster - Not Yet
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_charging_targets_mem_manager.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_fake_readings.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_delegate_impl.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_main.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_manager.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_manufacturer_impl.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_mode.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_stub.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_targets_store.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_test_event_trigger.cpp
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_preference_delegate.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_charging_targets_mem_manager.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_fake_readings.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_delegate_impl.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_main.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_manager.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_manufacturer_impl.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_mode.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_stub.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_targets_store.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_evse_test_event_trigger.cpp
+#SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/energy_evse/ameba_energy_preference_delegate.cpp
 # fan control cluster
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/fan_control/ameba_fan_control_delegate.cpp
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/fan_control/ameba_fan_control_manager.cpp
@@ -103,8 +111,6 @@ SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/microwave_oven_mode/ameba_microwa
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/microwave_oven_mode/ameba_microwave_oven_mode_instance.cpp
 # mode select cluster
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/mode_select/ameba_mode_select_manager.cpp
-# occupancy sensing cluster
-SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/occupancy_sensing/ameba_occupancy_sensing_instance.cpp
 # operational state cluster
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/operational_state/ameba_operational_state_delegate.cpp
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/operational_state/ameba_operational_state_instance.cpp
