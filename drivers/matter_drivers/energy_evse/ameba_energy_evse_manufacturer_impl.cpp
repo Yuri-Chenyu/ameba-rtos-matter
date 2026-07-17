@@ -476,8 +476,13 @@ using namespace chip::app::Clusters::ElectricalEnergyMeasurement::Structs;
 CHIP_ERROR EVSEManufacturer::SendCumulativeEnergyReading(EndpointId aEndpointId, int64_t aCumulativeEnergyImported,
         int64_t aCumulativeEnergyExported)
 {
-    const MeasurementData *data = MeasurementDataForEndpoint(aEndpointId);
-    VerifyOrReturnError(data != nullptr, CHIP_ERROR_UNINITIALIZED);
+    ElectricalEnergyMeasurementCluster * cluster = FindElectricalEnergyMeasurementClusterOnEndpoint(aEndpointId);
+    VerifyOrReturnError(cluster != nullptr, CHIP_ERROR_UNINITIALIZED);
+
+    Nullable<EnergyMeasurementStruct::Type> previousImported;
+    Nullable<EnergyMeasurementStruct::Type> previousExported;
+    ReturnErrorOnFailure(cluster->GetCumulativeEnergyImported(previousImported));
+    ReturnErrorOnFailure(cluster->GetCumulativeEnergyExported(previousExported));
 
     EnergyMeasurementStruct::Type energyImported;
     EnergyMeasurementStruct::Type energyExported;
@@ -486,9 +491,9 @@ CHIP_ERROR EVSEManufacturer::SendCumulativeEnergyReading(EndpointId aEndpointId,
     // Copy last endTimestamp into new startTimestamp if it exists
     energyImported.startTimestamp.ClearValue();
     energyImported.startSystime.ClearValue();
-    if (data->cumulativeImported.HasValue()) {
-        energyImported.startTimestamp = data->cumulativeImported.Value().endTimestamp;
-        energyImported.startSystime   = data->cumulativeImported.Value().endSystime;
+    if (!previousImported.IsNull()) {
+        energyImported.startTimestamp = previousImported.Value().endTimestamp;
+        energyImported.startSystime   = previousImported.Value().endSystime;
     }
 
     energyImported.energy = aCumulativeEnergyImported;
@@ -497,9 +502,9 @@ CHIP_ERROR EVSEManufacturer::SendCumulativeEnergyReading(EndpointId aEndpointId,
     // Copy last endTimestamp into new startTimestamp if it exists
     energyExported.startTimestamp.ClearValue();
     energyExported.startSystime.ClearValue();
-    if (data->cumulativeExported.HasValue()) {
-        energyExported.startTimestamp = data->cumulativeExported.Value().endTimestamp;
-        energyExported.startSystime   = data->cumulativeExported.Value().endSystime;
+    if (!previousExported.IsNull()) {
+        energyExported.startTimestamp = previousExported.Value().endTimestamp;
+        energyExported.startSystime   = previousExported.Value().endSystime;
     }
 
     energyExported.energy = aCumulativeEnergyExported;
@@ -524,7 +529,7 @@ CHIP_ERROR EVSEManufacturer::SendCumulativeEnergyReading(EndpointId aEndpointId,
     }
 
     // call the SDK to update attributes and generate an event
-    if (!NotifyCumulativeEnergyMeasured(aEndpointId, MakeOptional(energyImported), MakeOptional(energyExported))) {
+    if (!NotifyCumulativeEnergyMeasured(aEndpointId, MakeNullable(energyImported), MakeNullable(energyExported))) {
         ChipLogError(AppServer, "Failed to notify Cumulative Energy reading.");
         return CHIP_ERROR_INTERNAL;
     }
@@ -543,8 +548,13 @@ CHIP_ERROR EVSEManufacturer::SendCumulativeEnergyReading(EndpointId aEndpointId,
 CHIP_ERROR EVSEManufacturer::SendPeriodicEnergyReading(EndpointId aEndpointId, int64_t aPeriodicEnergyImported,
         int64_t aPeriodicEnergyExported)
 {
-    const MeasurementData *data = MeasurementDataForEndpoint(aEndpointId);
-    VerifyOrReturnError(data != nullptr, CHIP_ERROR_UNINITIALIZED);
+    ElectricalEnergyMeasurementCluster * cluster = FindElectricalEnergyMeasurementClusterOnEndpoint(aEndpointId);
+    VerifyOrReturnError(cluster != nullptr, CHIP_ERROR_UNINITIALIZED);
+
+    Nullable<EnergyMeasurementStruct::Type> previousImported;
+    Nullable<EnergyMeasurementStruct::Type> previousExported;
+    ReturnErrorOnFailure(cluster->GetPeriodicEnergyImported(previousImported));
+    ReturnErrorOnFailure(cluster->GetPeriodicEnergyExported(previousExported));
 
     EnergyMeasurementStruct::Type energyImported;
     EnergyMeasurementStruct::Type energyExported;
@@ -553,9 +563,9 @@ CHIP_ERROR EVSEManufacturer::SendPeriodicEnergyReading(EndpointId aEndpointId, i
     // Copy last endTimestamp into new startTimestamp if it exists
     energyImported.startTimestamp.ClearValue();
     energyImported.startSystime.ClearValue();
-    if (data->periodicImported.HasValue()) {
-        energyImported.startTimestamp = data->periodicImported.Value().endTimestamp;
-        energyImported.startSystime   = data->periodicImported.Value().endSystime;
+    if (!previousImported.IsNull()) {
+        energyImported.startTimestamp = previousImported.Value().endTimestamp;
+        energyImported.startSystime   = previousImported.Value().endSystime;
     }
 
     energyImported.energy = aPeriodicEnergyImported;
@@ -564,9 +574,9 @@ CHIP_ERROR EVSEManufacturer::SendPeriodicEnergyReading(EndpointId aEndpointId, i
     // Copy last endTimestamp into new startTimestamp if it exists
     energyExported.startTimestamp.ClearValue();
     energyExported.startSystime.ClearValue();
-    if (data->periodicExported.HasValue()) {
-        energyExported.startTimestamp = data->periodicExported.Value().endTimestamp;
-        energyExported.startSystime   = data->periodicExported.Value().endSystime;
+    if (!previousExported.IsNull()) {
+        energyExported.startTimestamp = previousExported.Value().endTimestamp;
+        energyExported.startSystime   = previousExported.Value().endSystime;
     }
 
     energyExported.energy = aPeriodicEnergyExported;
@@ -591,7 +601,7 @@ CHIP_ERROR EVSEManufacturer::SendPeriodicEnergyReading(EndpointId aEndpointId, i
     }
 
     // call the SDK to update attributes and generate an event
-    if (!NotifyPeriodicEnergyMeasured(aEndpointId, MakeOptional(energyImported), MakeOptional(energyExported))) {
+    if (!NotifyPeriodicEnergyMeasured(aEndpointId, MakeNullable(energyImported), MakeNullable(energyExported))) {
         ChipLogError(AppServer, "Failed to notify Cumulative Energy reading.");
         return CHIP_ERROR_INTERNAL;
     }

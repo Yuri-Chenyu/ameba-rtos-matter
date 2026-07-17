@@ -59,6 +59,8 @@ SRC_CPP += $(CHIPDIR)/examples/platform/ameba/shell/launch_shell.cpp
 # -------------------------------------------------------------------
 # Source Files (Example)
 # -------------------------------------------------------------------
+SRC_CPP += $(MATTER_EXAMPLE_DIR)/chiptest/ameba_code_driven_callbacks.cpp
+
 # actions cluster
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/actions/ameba_actions_delegate.cpp
 SRC_CPP += $(MATTER_DRIVER_DIR)/matter_drivers/actions/ameba_actions_server.cpp

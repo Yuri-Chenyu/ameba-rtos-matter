@@ -326,7 +326,7 @@ void emberAfElectricalEnergyMeasurementClusterInitCallback(chip::EndpointId endp
         gEEMAttrAccess->Init();
 
         SetMeasurementAccuracy(endpointId, accuracy);
-        SetCumulativeReset(endpointId, MakeOptional(resetStruct));
+        SetCumulativeReset(endpointId, MakeNullable(resetStruct));
     }
 }
 
